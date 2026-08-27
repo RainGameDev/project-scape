@@ -7,7 +7,7 @@ use engine_core::{
     update,
     window::Quit,
 };
-use game_3d::GameState;
+use game::GameState;
 
 use crate::ui::settings::SettingsOpen;
 

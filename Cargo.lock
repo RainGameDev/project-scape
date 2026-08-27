@@ -494,13 +494,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "client_3d"
+name = "client"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "bincode",
  "engine_core",
- "game_3d",
+ "game",
  "game_data",
  "image",
  "winit",
@@ -1135,7 +1135,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "game_3d"
+name = "game"
 version = "0.1.0"
 dependencies = [
  "engine_core",

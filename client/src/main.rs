@@ -12,7 +12,7 @@ use engine_core::{
     rendering::egui::{context::EguiContext, fonts::FontRegistry},
     start, update,
 };
-use game_3d::{GameState, components::TempCamera};
+use game::{GameState, components::TempCamera};
 
 use crate::bindings::registered_inputs;
 use crate::ui::settings::{SettingsState, bindings_path};
@@ -50,7 +50,7 @@ pub fn register_default_bindings(
 #[start]
 pub fn init(commands: &mut Commands) -> Result<()> {
     // Init the game, runs funcitons ect ect ect
-    commands.add_resource(game_3d::init());
+    commands.add_resource(game::init());
     commands.add_resource(GameState::MainMenu);
     commands.add_resource(SettingsState::default());
 

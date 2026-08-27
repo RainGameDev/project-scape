@@ -1,5 +1,5 @@
 [package]
-name = "game_3d"
+name = "game"
 version = "0.1.0"
 edition.workspace = true
 

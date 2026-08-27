@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["client_3d", "game_3d", "game_data"]
+members = ["client", "game", "game_data"]
 
 [workspace.package]
 edition = "2024"
