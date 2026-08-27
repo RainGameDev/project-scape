@@ -1,0 +1,15 @@
+[workspace]
+resolver = "2"
+members = ["client_3d", "game_3d", "game_data"]
+
+[workspace.package]
+edition = "2024"
+
+[workspace.dependencies]
+anyhow = "1.0.100"
+image = { version = "0.25", features = ["jpeg"] }
+bincode = "1"
+winit = { version = "0.30.5", features = ["serde"] }
+nalgebra = { version = "0.35.0", features = ["serde", "serde-serialize"] }
+serde = { version = "1", features = ["derive", "rc"] }
+serde_json = "1.0.151"
