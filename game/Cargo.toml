@@ -4,4 +4,5 @@ version = "0.1.0"
 edition.workspace = true
 
 [dependencies]
+anyhow = { workspace = true }
 engine_core = { path = "../../new-engine/crates/engine_core" }

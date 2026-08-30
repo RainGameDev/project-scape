@@ -12,7 +12,7 @@ use engine_core::{
     rendering::egui::{context::EguiContext, fonts::FontRegistry},
     start, update,
 };
-use game::{GameState, components::TempCamera};
+use game::{GameState, components::{MenuCamera, TempCamera}};
 
 use crate::bindings::registered_inputs;
 use crate::ui::settings::{SettingsState, bindings_path};
@@ -53,6 +53,7 @@ pub fn init(commands: &mut Commands) -> Result<()> {
     commands.add_resource(game::init());
     commands.add_resource(GameState::MainMenu);
     commands.add_resource(SettingsState::default());
+    commands.add_resource(game::player::LookController::default());
 
     let mut fonts = FontRegistry::default();
     fonts.load_dir(std::path::Path::new(&format!(
@@ -68,6 +69,7 @@ pub fn init(commands: &mut Commands) -> Result<()> {
     commands.add_component(menu_camera, TempCamera);
     commands.add_component(menu_camera, GameCamera);
     commands.add_component(menu_camera, Camera::perspective(90.0, 1.0, 0.001, 1000.0));
+    commands.add_resource(MenuCamera(Some(menu_camera)));
 
     Ok(())
 }
