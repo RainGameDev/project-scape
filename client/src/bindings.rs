@@ -39,12 +39,16 @@ pub fn registered_inputs() -> Vec<RegisteredInput> {
             ))),
         },
         RegisteredInput {
-            name: "Interact",
-            default: ActionBinding::button(InputSource::Keyboard(PhysicalKey::Code(K::KeyE))),
+            name: "Inventory",
+            default: ActionBinding::button(InputSource::Keyboard(PhysicalKey::Code(K::KeyI))),
         },
         RegisteredInput {
             name: "Pause",
             default: ActionBinding::button(InputSource::Keyboard(PhysicalKey::Code(K::Escape))),
+        },
+        RegisteredInput {
+            name: "Interact",
+            default: ActionBinding::button(InputSource::Keyboard(PhysicalKey::Code(K::KeyF))),
         },
     ]
 }

@@ -6,3 +6,5 @@ edition.workspace = true
 [dependencies]
 anyhow = { workspace = true }
 engine_core = { path = "../../new-engine/crates/engine_core" }
+game_data = {path = "../game_data/"}
+image = { workspace = true }

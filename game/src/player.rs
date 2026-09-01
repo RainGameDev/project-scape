@@ -3,20 +3,21 @@ use engine_core::{
     Resource,
     ecs::{
         components::engine_components::{camera::GameCamera, transform::Transform},
-        query::query::Query,
+        query::{filter::With, query::Query},
         systems::{
             DeltaTime,
-            param::{Res, ResMut},
+            param::{Raycast, Res, ResMut},
         },
     },
     input::InputManager,
+    log_debug,
     nalgebra::{UnitQuaternion, Vector3},
     physics::velocity::Velocity,
     update,
 };
 
-use crate::GameState;
-use crate::components::Player;
+use crate::{GameState, ui::containers::item_pickup::ItemPickup};
+use crate::{components::Player, ui::containers::Container};
 
 const MAX_PITCH: f32 = 1.0;
 const JUMP_SPEED: f32 = 5.0;
@@ -85,6 +86,32 @@ pub fn player_controller(
     if input.just_pressed("Jump") && player_velocity.is_grounded {
         player_velocity.linear_velocity.y = JUMP_SPEED;
     }
+
+    Ok(())
+}
+
+#[update]
+pub fn player_interaction(
+    raycast: Raycast,
+    input: Res<InputManager>,
+    game_state: Res<GameState>,
+    players: Query<&mut Container, With<Player>>,
+) -> Result<()> {
+    let Some(inventory) = players.iter().next() else {
+        return Ok(());
+    };
+    if !game_state.is_playing() || !input.just_pressed("Interact") {
+        return Ok(());
+    }
+    let Some(hit) = raycast.cast_camera(3.0) else {
+        return Ok(());
+    };
+    let Some(pickup) = raycast.entity_of::<ItemPickup>(hit.entity_id) else {
+        return Ok(());
+    };
+
+    log_debug!("hi");
+    inventory.add_item(&pickup.item);
 
     Ok(())
 }

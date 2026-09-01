@@ -1,3 +1,10 @@
+use crate::ui::containers::inventory::InventoryItem;
+use crate::ui::containers::item_pickup::ItemPickup;
+use crate::{
+    components::{MenuCamera, Player},
+    ui::containers::Container,
+};
+use anyhow::Result;
 use engine_core::{
     Resource,
     ecs::{
@@ -9,6 +16,7 @@ use engine_core::{
         },
         systems::param::{Assets, Res, ResMut},
     },
+    input::InputManager,
     nalgebra::Vector3,
     physics::{
         collider::{Collider, ColliderShape},
@@ -16,22 +24,30 @@ use engine_core::{
         velocity::Velocity,
     },
     rendering::core::model::GpuMesh,
-    update,
+    start, update,
     window::window_manager::{MouseMode, WindowManager},
 };
+use game_data::registry::GameRegistry;
 
-use crate::components::{MenuCamera, Player};
+pub use ui::containers::inventory::InventoryUi;
+
+pub mod ui;
 
 #[derive(Resource, Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum GameState {
     #[default]
     MainMenu,
     Playing,
+    Paused,
 }
 
 impl GameState {
     pub fn is_playing(&self) -> bool {
         matches!(self, GameState::Playing)
+    }
+
+    pub fn is_main_menu(&self) -> bool {
+        matches!(self, GameState::MainMenu)
     }
 }
 
@@ -39,10 +55,56 @@ pub mod components;
 pub mod player;
 
 #[derive(Resource, Debug, Default)]
-pub struct GameContext;
+pub struct GameContext {
+    pub registry: GameRegistry,
+}
 
 pub fn init() -> GameContext {
-    GameContext
+    let registry = load_registry().expect("failed to load game registry");
+    GameContext { registry }
+}
+
+fn load_registry() -> anyhow::Result<GameRegistry> {
+    let manifest = env!("CARGO_MANIFEST_DIR");
+    let game_data_dir = std::path::Path::new(manifest).join("data");
+    let base_data_dir = std::path::Path::new(manifest).join("../game_data/data");
+
+    GameRegistry::load_from_dirs(&[game_data_dir, base_data_dir])
+}
+
+#[update]
+pub fn toggle_pause(
+    mut game_state: ResMut<GameState>,
+    mut window_manager: ResMut<WindowManager>,
+    input: Res<InputManager>,
+) -> anyhow::Result<()> {
+    if !input.just_pressed("Pause") {
+        return Ok(());
+    }
+    match *game_state {
+        GameState::Playing => {
+            *game_state = GameState::Paused;
+            window_manager.change_mouse_mode(MouseMode::Noop);
+        }
+        GameState::Paused => {
+            *game_state = GameState::Playing;
+            window_manager.change_mouse_mode(MouseMode::LockedInvisible);
+        }
+        GameState::MainMenu => {}
+    }
+    Ok(())
+}
+
+#[start]
+pub fn start(commands: &mut Commands) -> Result<()> {
+    commands.add_resource(InventoryUi::default());
+
+    let registry = load_registry()?;
+    for (id, def) in registry.items {
+        commands.add_asset(def, id);
+    }
+
+    Ok(())
 }
 
 #[update]
@@ -51,6 +113,7 @@ pub fn start_playing(
     mut menu_camera: ResMut<MenuCamera>,
     mut window_manager: ResMut<WindowManager>,
     assets: Assets<GpuMesh>,
+    game_context: Res<GameContext>,
     commands: &mut Commands,
 ) -> anyhow::Result<()> {
     if !game_state.is_playing() {
@@ -117,6 +180,15 @@ pub fn start_playing(
         commands.add_component(cube, ModelRenderer { model: handle });
     }
 
+    if let Some(iron_sword) = game_context.registry.item("apostasy:Iron Sword") {
+        commands.add_component(
+            cube,
+            ItemPickup {
+                item: InventoryItem::from_def(iron_sword.clone()),
+            },
+        );
+    }
+
     let player = commands.spawn();
     commands.add_component(
         player,
@@ -125,6 +197,7 @@ pub fn start_playing(
     let mut player_velocity = Velocity::zero();
     player_velocity.inertia_tensor = Vector3::zeros();
     commands.add_component(player, player_velocity);
+    commands.add_component(player, Container::default());
     commands.add_component(
         player,
         Gravity {

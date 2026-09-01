@@ -1,0 +1,9 @@
+{
+  name: "Iron Sword",
+  namespace: "apostasy",
+  categories: ["weapon"],
+  components: {
+    weapon: { damage: 8, speed: 1.0 },
+    CanStack: {}
+  },
+}

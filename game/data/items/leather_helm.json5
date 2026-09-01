@@ -1,0 +1,8 @@
+{
+  name: "Leather Helm",
+  namespace: "apostasy",
+  categories: ["apparel"],
+  components: {
+    armour: { defense: 2 },
+  },
+}

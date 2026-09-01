@@ -1,4 +1,5 @@
-use engine_core::{component, ecs::entities::Entity, Resource};
+use engine_core::{Resource, component, ecs::entities::Entity};
+pub mod item_components;
 
 #[component]
 pub struct TempCamera;

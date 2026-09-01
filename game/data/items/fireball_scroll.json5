@@ -1,0 +1,9 @@
+{
+  name: "Fireball Scroll",
+  namespace: "apostasy",
+  categories: ["magic"],
+  components: {
+    consumable: { uses: 3 },
+    enchantment: { name: "Fireball", magnitude: 32.0 },
+  },
+}

@@ -1,0 +1,10 @@
+{
+  name: "Mana Crystal",
+  namespace: "apostasy",
+  categories: ["magic"],
+  icon: "sprite:mana_crystal",
+  components: {
+    consumable: { uses: 1 },
+    enchantment: { name: "RestoreMagicka", magnitude: 25.0 },
+  },
+}

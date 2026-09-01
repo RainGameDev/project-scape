@@ -17,7 +17,7 @@ pub fn main_menu(
     mut game_state: ResMut<GameState>,
     commands: &mut Commands,
 ) -> Result<()> {
-    if game_state.is_playing() {
+    if !game_state.is_main_menu() {
         return Ok(());
     }
 

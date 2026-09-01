@@ -1,0 +1,8 @@
+{
+  name: "Steel Shield",
+  namespace: "apostasy",
+  categories: ["armour"],
+  components: {
+    armour: { defence: 12 },
+  },
+}

@@ -1,0 +1,9 @@
+{
+  name: "Apprentice Robes",
+  namespace: "apostasy",
+  categories: ["apparel"],
+  components: {
+    armour: { defense: 1 },
+    enchantment: { name: "FortifyMagicka", magnitude: 20.0 },
+  },
+}
